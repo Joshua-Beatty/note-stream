@@ -9,6 +9,7 @@ import {
   syncNoteAttachments,
   syncNoteTags,
 } from "../lib/notes.js";
+import { notifyDataChanged } from "../events/events.js";
 
 export const notesUpdateInput = z.object({
   id: z.string().uuid(),
@@ -41,7 +42,11 @@ export const notesUpdate = publicProcedure
       .andThen(() =>
         syncNoteAttachments(ctx.db, input.id, input.attachmentIds, now),
       )
-      .andThen(() => getNoteById(ctx.db, input.id));
+      .andThen(() => getNoteById(ctx.db, input.id))
+      .map((note) => {
+        notifyDataChanged();
+        return note;
+      });
 
     return unwrapResult(result);
   });

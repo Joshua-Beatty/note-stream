@@ -9,6 +9,7 @@ import type { Env } from "./env.js";
 import { appRouter } from "./trpc/router.js";
 import { createContextFactory } from "./trpc/context.js";
 import { createUploadHandler, sanitizeFilename } from "./upload/upload.js";
+import { eventsHandler } from "./events/events.js";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -27,6 +28,9 @@ export function createApp(db: Kysely<Database>, env: Env): Hono {
   );
 
   app.post("/api/upload", createUploadHandler(db, env));
+
+  // Live updates: SSE stream of data-version events.
+  app.get("/api/events", eventsHandler);
 
   // Uploaded files: /user_content/{uuid}/{filename}
   app.get("/user_content/:id/:filename", async (c) => {

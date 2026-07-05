@@ -18,11 +18,18 @@ Filter the stream with full-text search, a calendar, and `#tags`.
 - **Attachments** — images preview inline and open in a fullscreen modal;
   text files preview their content; everything else gets a file card with
   details and a download button
+- **Live updates** — changes from other devices appear automatically via
+  server-sent events, and the app refreshes itself the moment it's brought
+  back to the foreground (great as a phone home-screen app)
 - Dark mode by default, themeable via CSS variables
 
 > **Warning — no authentication.** note-stream has no auth of any kind. Run
 > it behind a reverse proxy (Authelia, Caddy basic-auth, Tailscale, etc.) and
 > never expose it directly to the internet.
+>
+> When configuring the proxy, make sure `/api/events` (server-sent events) is
+> not buffered — e.g. for nginx set `proxy_buffering off;` for that location.
+> Caddy and Traefik handle it correctly by default.
 
 ## Running with Docker (recommended)
 

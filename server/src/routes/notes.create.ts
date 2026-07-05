@@ -10,6 +10,7 @@ import {
   syncNoteAttachments,
   syncNoteTags,
 } from "../lib/notes.js";
+import { notifyDataChanged } from "../events/events.js";
 
 export const notesCreateInput = z.object({
   content: z.string().min(1, "Note content cannot be empty"),
@@ -39,7 +40,11 @@ export const notesCreate = publicProcedure
       .andThen(() =>
         syncNoteAttachments(ctx.db, id, input.attachmentIds, now),
       )
-      .andThen(() => getNoteById(ctx.db, id));
+      .andThen(() => getNoteById(ctx.db, id))
+      .map((note) => {
+        notifyDataChanged();
+        return note;
+      });
 
     return unwrapResult(result);
   });

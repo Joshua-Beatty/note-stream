@@ -5,12 +5,14 @@ import { Sidebar } from "@/components/Sidebar";
 import { Composer } from "@/components/Composer";
 import { NoteStream } from "@/components/NoteStream";
 import { useFilters } from "@/state/filters";
+import { useLiveUpdates } from "@/hooks/useLiveUpdates";
 
 export function App() {
   const [editing, setEditing] = React.useState<Note | null>(null);
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
   const mainRef = React.useRef<HTMLElement>(null);
   const { filters } = useFilters();
+  useLiveUpdates();
 
   // Close the mobile drawer whenever a filter changes so results are visible.
   React.useEffect(() => {

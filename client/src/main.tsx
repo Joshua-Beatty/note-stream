@@ -8,7 +8,9 @@ import "./styles/globals.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {
-    queries: { retry: 1, refetchOnWindowFocus: false },
+    // refetchOnWindowFocus complements the SSE live updates (useLiveUpdates):
+    // stale queries refetch on focus even if a version event was missed.
+    queries: { retry: 1, refetchOnWindowFocus: true, staleTime: 10_000 },
   },
 });
 const trpcClient = createTrpcClient();

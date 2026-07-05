@@ -3,6 +3,7 @@ import { ResultAsync, ok, err } from "neverthrow";
 import { publicProcedure, unwrapResult } from "../trpc/trpc.js";
 import { dbError, notFound } from "../lib/errors.js";
 import { nowLocalIso } from "../lib/time.js";
+import { notifyDataChanged } from "../events/events.js";
 
 export const notesDeleteInput = z.object({
   id: z.string().uuid(),
@@ -39,9 +40,14 @@ export const notesDelete = publicProcedure
         return { id: input.id };
       })(),
       (cause) => dbError("Failed to delete note", cause),
-    ).andThen((res) =>
-      res === null ? err(notFound(`Note ${input.id} not found`)) : ok(res),
-    );
+    )
+      .andThen((res) =>
+        res === null ? err(notFound(`Note ${input.id} not found`)) : ok(res),
+      )
+      .map((res) => {
+        notifyDataChanged();
+        return res;
+      });
 
     return unwrapResult(result);
   });

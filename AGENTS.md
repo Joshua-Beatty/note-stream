@@ -32,6 +32,11 @@ npm run typecheck    # all workspaces
   `trpc/router.ts`. Every route validates input with zod.
 - **Uploads are not tRPC** — `/api/upload` is a plain Hono multipart route in
   `server/src/upload/`.
+- **Live updates**: `/api/events` is a plain Hono SSE route
+  (`server/src/events/`). Every successful mutation must call
+  `notifyDataChanged()` so connected clients invalidate their queries; the
+  client side lives in `client/src/hooks/useLiveUpdates.ts` (SSE + reconnect
+  and refetch on visibility/pageshow/online).
 - **Migrations** live in `server/src/db/migrations/`, embedded via the record
   in `index.ts` and run on boot. Up-only, append-only: never edit a shipped
   migration — add a new numbered file, and update the hand-written schema
