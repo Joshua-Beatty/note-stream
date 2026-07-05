@@ -1,0 +1,24 @@
+services:
+  note-stream:
+    # Builds the image directly from the git repository.
+    # Use a local checkout instead with: build: .
+    build: https://github.com/Joshua-Beatty/note-stream.git
+    container_name: note-stream
+    ports:
+      - "3000:3000"
+    volumes:
+      # Persists the SQLite database and all uploaded files.
+      - ./config:/config
+    environment:
+      # Controls the server-local day boundaries used by the calendar filter.
+      # Example: Mountain Time.
+      - TZ=America/Denver
+      # Optional overrides (shown with their defaults):
+      # - PORT=3000
+      # - DATA_DIR=/config
+      # - MAX_FILE_SIZE_MB=100
+      # - MAX_FILES_PER_NOTE=20
+    restart: unless-stopped
+
+    # NOTE: note-stream has no authentication. Do not expose it directly to
+    # the internet — run it behind a reverse proxy that handles auth.
