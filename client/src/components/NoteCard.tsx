@@ -43,24 +43,25 @@ export function NoteCard({
           {formatRelative(note.createdAt)}
           {note.updatedAt !== note.createdAt ? " (edited)" : ""}
         </time>
-        <div className="flex gap-1 opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100">
+        {/* Always visible on touch devices; hover-revealed only where hover exists. */}
+        <div className="flex gap-1 transition-opacity [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:focus-within:opacity-100">
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7"
+            className="h-9 w-9 text-muted-foreground [@media(hover:hover)]:h-7 [@media(hover:hover)]:w-7"
             aria-label="Edit note"
             onClick={() => onEdit(note)}
           >
-            <Pencil className="h-3.5 w-3.5" />
+            <Pencil className="h-4 w-4 [@media(hover:hover)]:h-3.5 [@media(hover:hover)]:w-3.5" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7 text-destructive hover:text-destructive"
+            className="h-9 w-9 text-destructive hover:text-destructive [@media(hover:hover)]:h-7 [@media(hover:hover)]:w-7"
             aria-label="Delete note"
             onClick={() => setConfirmDelete(true)}
           >
-            <Trash2 className="h-3.5 w-3.5" />
+            <Trash2 className="h-4 w-4 [@media(hover:hover)]:h-3.5 [@media(hover:hover)]:w-3.5" />
           </Button>
         </div>
       </div>
