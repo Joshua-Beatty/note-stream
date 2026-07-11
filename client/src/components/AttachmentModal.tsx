@@ -3,7 +3,7 @@ import { Download, FileIcon } from "lucide-react";
 import type { Attachment } from "@note-stream/shared";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { formatBytes } from "@/lib/format";
-import { isImage, isTextFile } from "@/lib/uploads";
+import { isImage, isPdf, isTextFile } from "@/lib/uploads";
 
 export function AttachmentModal({
   attachment,
@@ -40,10 +40,11 @@ export function AttachmentModal({
   if (attachment === null) return null;
 
   const image = isImage(attachment.mimeType);
+  const pdf = isPdf(attachment.mimeType);
 
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent fullscreen={image || isText}>
+      <DialogContent fullscreen={image || isText || pdf}>
         <DialogTitle className="pr-10 text-sm font-medium break-all">
           {attachment.filename}
           <span className="ml-2 text-xs text-muted-foreground">
@@ -59,6 +60,12 @@ export function AttachmentModal({
               className="max-h-full max-w-full object-contain"
             />
           </div>
+        ) : pdf ? (
+          <iframe
+            src={attachment.url}
+            title={attachment.filename}
+            className="min-h-0 flex-1 rounded-md border border-border bg-white"
+          />
         ) : isText ? (
           <pre className="min-h-0 flex-1 overflow-auto rounded-md bg-muted p-3 text-xs whitespace-pre-wrap">
             {textContent ?? "Loading…"}

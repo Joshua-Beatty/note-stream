@@ -4,7 +4,7 @@ import type { Note, UploadedFile } from "@note-stream/shared";
 import { trpc } from "@/trpc";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { uploadFiles, isImage } from "@/lib/uploads";
+import { uploadFiles, isImage, isPdf, attachmentThumbUrl } from "@/lib/uploads";
 import { formatBytes } from "@/lib/format";
 
 export interface EditingNote {
@@ -161,6 +161,16 @@ export function Composer({
                   src={a.url}
                   alt={a.filename}
                   className="h-8 w-8 rounded object-cover"
+                />
+              ) : isPdf(a.mimeType) ? (
+                <img
+                  src={attachmentThumbUrl(a.id)}
+                  alt={a.filename}
+                  className="h-8 w-8 rounded bg-white object-cover object-top"
+                  onError={(e) => {
+                    // Fall back to the paperclip icon if the thumb fails.
+                    e.currentTarget.style.display = "none";
+                  }}
                 />
               ) : (
                 <Paperclip className="mx-1.5 h-4 w-4 text-muted-foreground" />

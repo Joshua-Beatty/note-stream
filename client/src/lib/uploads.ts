@@ -24,6 +24,15 @@ export function isImage(mimeType: string): boolean {
   return mimeType.startsWith("image/");
 }
 
+export function isPdf(mimeType: string): boolean {
+  return mimeType === "application/pdf";
+}
+
+/** URL for a PDF attachment's server-rendered thumbnail. */
+export function attachmentThumbUrl(id: string): string {
+  return `/user_content/${id}/thumb`;
+}
+
 const TEXT_EXTENSIONS =
   /\.(txt|md|markdown|json|js|jsx|ts|tsx|css|html|xml|ya?ml|toml|csv|log|sh|py|rb|go|rs|java|c|h|cpp|hpp|sql)$/i;
 
