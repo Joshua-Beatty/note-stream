@@ -8,6 +8,11 @@ export function attachmentUrl(id: string, filename: string): string {
   return `/user_content/${id}/${encodeURIComponent(filename)}`;
 }
 
+/** URL for a PDF attachment's server-rendered thumbnail. */
+export function attachmentThumbUrl(id: string): string {
+  return `/user_content/${id}/thumb`;
+}
+
 type NoteRow = Pick<
   NotesTable,
   "id" | "content" | "created_at" | "updated_at"
