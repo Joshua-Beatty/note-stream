@@ -19,14 +19,14 @@ export function AttachmentPreview({
       <button
         type="button"
         onClick={onClick}
-        className="group overflow-hidden rounded-md border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="group/file overflow-hidden rounded-md border border-border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         title={attachment.filename}
       >
         <img
           src={attachment.url}
           alt={attachment.filename}
           loading="lazy"
-          className="h-28 w-28 object-cover transition-transform group-hover:scale-105"
+          className="h-28 w-28 object-cover transition-transform group-hover/file:scale-105"
         />
       </button>
     );
@@ -37,7 +37,7 @@ export function AttachmentPreview({
       <button
         type="button"
         onClick={onClick}
-        className="group relative overflow-hidden rounded-md border border-border bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="group/file relative overflow-hidden rounded-md border border-border bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         title={attachment.filename}
       >
         <img
@@ -45,7 +45,7 @@ export function AttachmentPreview({
           alt={attachment.filename}
           loading="lazy"
           onError={() => setPdfThumbFailed(true)}
-          className="h-28 w-28 bg-white object-cover object-top transition-transform group-hover:scale-105"
+          className="h-28 w-28 bg-white object-cover object-top transition-transform group-hover/file:scale-105"
         />
         <span className="absolute bottom-1 left-1 rounded bg-black/70 px-1 text-[10px] font-medium tracking-wide text-white">
           PDF
