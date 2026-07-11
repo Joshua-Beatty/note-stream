@@ -97,8 +97,19 @@ export function createApp(db: Kysely<Database>, env: Env): Hono {
       return c.notFound();
     }
 
+    // Serve the stored MIME type so browsers render (e.g.) PDFs inline in an
+    // iframe rather than guessing and showing the raw bytes as text.
+    const record = await db
+      .selectFrom("attachments")
+      .select("mime_type")
+      .where("id", "=", id)
+      .where("deleted_at", "is", null)
+      .executeTakeFirst();
+    const contentType = record?.mime_type ?? "application/octet-stream";
+
     const stream = fs.createReadStream(filePath);
     const headers = new Headers({
+      "Content-Type": contentType,
       "Content-Length": String(stat.size),
       "Cache-Control": "public, max-age=31536000, immutable",
     });

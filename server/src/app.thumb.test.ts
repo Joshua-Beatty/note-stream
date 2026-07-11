@@ -164,3 +164,35 @@ describe("PDF thumbnail route", () => {
     expect(res.status).toBe(404);
   });
 });
+
+describe("file-serving route Content-Type", () => {
+  it("serves a PDF with its stored application/pdf MIME type", async () => {
+    const db = await createTestDb();
+    const env = createTestEnv();
+    const app = createApp(db, env);
+    const id = await addAttachment(db, env, {
+      filename: "sample.pdf",
+      mimeType: "application/pdf",
+      contentPath: SAMPLE_PDF,
+    });
+
+    const res = await app.request(`/user_content/${id}/sample.pdf`);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toBe("application/pdf");
+  });
+
+  it("falls back to octet-stream for an unrecorded file", async () => {
+    const db = await createTestDb();
+    const env = createTestEnv();
+    const app = createApp(db, env);
+    // Write a file on disk without a matching DB row.
+    const id = uuidv7();
+    const dir = path.join(env.userContentDir, id);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, "orphan.bin"), "data");
+
+    const res = await app.request(`/user_content/${id}/orphan.bin`);
+    expect(res.status).toBe(200);
+    expect(res.headers.get("content-type")).toBe("application/octet-stream");
+  });
+});
