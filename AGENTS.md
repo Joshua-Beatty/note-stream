@@ -75,5 +75,15 @@ npm run typecheck    # all workspaces
   without a TTY on Windows (e.g. under concurrently).
 - `@note-stream/shared` must stay in the server's `dependencies` (not
   devDependencies) or `npm prune --omit=dev` breaks the Docker runtime image.
+- **Adding a server runtime dependency:** declare it in `server/package.json`
+  `dependencies` (never devDependencies) and run `npm install` from the repo
+  root so the lockfile is updated — `npm install --workspace=server` alone can
+  leave the manifest untouched. Watch for version conflicts: if another version
+  of the package is already hoisted to the root `node_modules`, npm nests the
+  new one under `server/node_modules/` instead. The Docker runtime stage only
+  copies what it's told to, so any nested `server/node_modules` deps must be
+  copied in the Dockerfile or the container dies at boot with
+  `ERR_MODULE_NOT_FOUND` (this is why the Dockerfile copies
+  `server/node_modules`). Verify with a Docker build, not just `npm test`.
 - The app has no auth by design; it is deployed behind a reverse proxy.
 - Docker persists everything under one `DATA_DIR` (`/config`) bind mount.
